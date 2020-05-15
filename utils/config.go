@@ -6,7 +6,7 @@ import (
 
 var (
 	Config = struct {
-		PrivatKey string `required:"true"`
+		Key string `required:"true"`
 	}{}
 )
 

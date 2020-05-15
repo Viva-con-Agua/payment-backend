@@ -26,6 +26,6 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
-	e.POST("/secret", controller.PaymentIntentCard)
+	e.POST("/api/v1/payment/card", controller.PaymentIntentCard)
 	e.Logger.Fatal(e.Start(":1323"))
 }

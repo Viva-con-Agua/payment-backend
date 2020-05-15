@@ -22,7 +22,7 @@ func PaymentIntentCard(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	stripe.Key = utils.Config.PrivatKey
+	stripe.Key = utils.Config.Key
 
 	params := &stripe.PaymentIntentParams{
 		Amount:   &body.Amount,
