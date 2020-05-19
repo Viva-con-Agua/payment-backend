@@ -27,5 +27,6 @@ func main() {
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.POST("/api/v1/payment/card", controller.PaymentIntentCard)
+	e.POST("/api/v1/payment/iban", controller.PaymentIntentIBAN)
 	e.Logger.Fatal(e.Start(":1323"))
 }
