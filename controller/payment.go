@@ -71,3 +71,16 @@ func PaymentIntentIBAN(c echo.Context) (err error) {
 	}
 	return c.JSON(http.StatusOK, &data)
 }
+
+func SuccessPayment(c echo.Context) (err error) {
+	body := new(models.Payment)
+	if err = c.Bind(body); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	// validate body
+	if err = c.Validate(body); err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, &body)
+
+}
