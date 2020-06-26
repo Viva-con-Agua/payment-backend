@@ -1,9 +1,19 @@
 package models
 
 type (
-	Money struct {
+	Sepa struct {
 		Amount   int64  `json:"amount"`
 		Currency string `json:"currency"`
+		Email    string `json:"email"`
+		Name     string `json:"name"`
+		Locale   string `json:"locale"`
+	}
+	CreditCard struct {
+		Amount   int64  `json:"amount"`
+		Currency string `json:"currency"`
+		Email    string `json:"email"`
+		Name     string `json:"name"`
+		Locale   string `json:"locale"`
 	}
 
 	CheckoutData struct {

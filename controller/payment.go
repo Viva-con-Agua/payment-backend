@@ -13,7 +13,7 @@ import (
 
 func PaymentIntentCard(c echo.Context) (err error) {
 	// create body as models.Role
-	body := new(models.Money)
+	body := new(models.CreditCard)
 	// save data to body
 	if err = c.Bind(body); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -25,9 +25,20 @@ func PaymentIntentCard(c echo.Context) (err error) {
 
 	stripe.Key = utils.Config.Key
 
+	cu_params := &stripe.CustomerParams{
+		Email:            stripe.String(string(body.Email)),
+		Name:             stripe.String(string(body.Name)),
+		PreferredLocales: []*string{stripe.String(body.Locale)},
+	}
+	cu, err := customer.New(cu_params)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
 	params := &stripe.PaymentIntentParams{
 		Amount:   &body.Amount,
 		Currency: &body.Currency,
+		Customer: stripe.String(cu.ID),
 		PaymentMethodTypes: []*string{
 			stripe.String("card"),
 		},
@@ -41,7 +52,7 @@ func PaymentIntentCard(c echo.Context) (err error) {
 
 func PaymentIntentIBAN(c echo.Context) (err error) {
 	// create body as models.Role
-	body := new(models.Money)
+	body := new(models.Sepa)
 	// save data to body
 	if err = c.Bind(body); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -52,8 +63,17 @@ func PaymentIntentIBAN(c echo.Context) (err error) {
 	}
 
 	stripe.Key = utils.Config.Key
-	cu_params := &stripe.CustomerParams{}
-	cu, _ := customer.New(cu_params)
+
+	cu_params := &stripe.CustomerParams{
+		Email:            stripe.String(string(body.Email)),
+		Name:             stripe.String(string(body.Name)),
+		PreferredLocales: []*string{stripe.String(body.Locale)},
+	}
+	cu, err := customer.New(cu_params)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+
 	params := &stripe.PaymentIntentParams{
 		Amount:           &body.Amount,
 		Currency:         &body.Currency,
