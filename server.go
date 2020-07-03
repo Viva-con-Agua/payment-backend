@@ -29,5 +29,7 @@ func main() {
 	e.POST("/api/v1/payment/card", controller.PaymentIntentCard)
 	e.POST("/api/v1/payment/iban", controller.PaymentIntentIBAN)
 	e.POST("/api/v1/payment/success", controller.SuccessPayment)
+	e.POST("/api/v1/payment/subscription", controller.Subscription)
+	e.POST("/api/v1/payment/default", controller.AddDefaultPayment)
 	e.Logger.Fatal(e.Start(":1323"))
 }
