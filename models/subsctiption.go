@@ -10,4 +10,7 @@ type (
 		Currency string `json:"currency"`
 		Type     string `json:"type"`
 	}
+	ResponseMessage struct {
+		Message string `json:"message"`
+	}
 )

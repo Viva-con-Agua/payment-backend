@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"log"
 	"net/http"
 	"payment-backend/models"
 	"payment-backend/utils"
@@ -20,9 +19,7 @@ func CheckCustomer(billing *models.Billing) (customer_id *stripe.Customer, err e
 	stripe.Key = utils.Config.Key
 	cu_search_params := &stripe.CustomerListParams{}
 	cu_search_params.Filters.AddFilter("email", "", billing.Email)
-	log.Print(cu_search_params)
 	cu_response := customer.List(cu_search_params)
-	log.Print(cu_response)
 	var cu_list []*stripe.Customer
 	for cu_response.Next() {
 		cu_list = append(cu_list, cu_response.Customer())
@@ -60,8 +57,6 @@ func AddDefaultPayment(c echo.Context) (err error) {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
-	log.Print(cu)
-
 	intent_params := &stripe.SetupIntentParams{
 		PaymentMethodTypes: []*string{
 			stripe.String(body.Type),
@@ -79,7 +74,6 @@ func AddDefaultPayment(c echo.Context) (err error) {
 }
 
 func Subscription(c echo.Context) (err error) {
-
 	stripe.Key = utils.Config.Key
 	//handle body as Subscription
 	body := new(models.Billing)
@@ -104,6 +98,11 @@ func Subscription(c echo.Context) (err error) {
 	for i.Next() {
 		pm_list = append(pm_list, i.PaymentMethod())
 	}
+	if pm_list == nil {
+		response := new(models.ResponseMessage)
+		response.Message = "no payment method"
+		return c.JSON(http.StatusBadRequest, response)
+	}
 	pm := pm_list[0]
 	default_params := &stripe.CustomerParams{
 		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
@@ -111,16 +110,11 @@ func Subscription(c echo.Context) (err error) {
 		},
 	}
 
-	cu, _ = customer.Update(cu.ID, default_params)
+	cu, err = customer.Update(cu.ID, default_params)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, i)
+		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	//product_params := &stripe.ProductParams{
-	//	Name: stripe.String("Supporting Membership"),
-	//	Type: stripe.String(string(stripe.ProductTypeService)),
-	//}
-	//log.Print("customer", cu)
 	price_params := &stripe.PriceParams{
 		Nickname:   stripe.String("Standard Monthly"),
 		Product:    stripe.String("prod_HZW4PLYJeuxnyC"),
@@ -132,7 +126,10 @@ func Subscription(c echo.Context) (err error) {
 		},
 	}
 
-	p, _ := price.New(price_params)
+	p, err := price.New(price_params)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
 	params := &stripe.SubscriptionParams{
 		Customer: stripe.String(cu.ID),
 		Items: []*stripe.SubscriptionItemsParams{
@@ -142,7 +139,11 @@ func Subscription(c echo.Context) (err error) {
 			},
 		},
 	}
+
 	params.AddExpand("latest_invoice.payment_intent")
-	s, _ := sub.New(params)
-	return c.JSON(http.StatusCreated, s)
+	s, err := sub.New(params)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err)
+	}
+	return c.JSON(http.StatusOK, s)
 }
