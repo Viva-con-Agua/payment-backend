@@ -136,7 +136,7 @@ func Subscription(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, response)
 
 	}
-	p, err := stripeapi.CreatePrice(body.Amount, body.Product)
+	p, err := stripeapi.CreatePrice(body.Amount, body.Product, body.Interval)
 	if err != nil {
 		log.Print("Error CreatePrice: \n", err)
 		response := new(models.ResponseMessage)
