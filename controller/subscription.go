@@ -12,8 +12,6 @@ import (
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/paymentmethod"
-	"github.com/stripe/stripe-go/price"
-	"github.com/stripe/stripe-go/sub"
 )
 
 /**
@@ -117,64 +115,35 @@ func Subscription(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	cu, err := CheckCustomer(body)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
-
-	pm_params := &stripe.PaymentMethodListParams{
-		Customer: stripe.String(cu.ID),
-		Type:     stripe.String(body.Type),
-	}
-	var pm_list []*stripe.PaymentMethod
-	i := paymentmethod.List(pm_params)
-	for i.Next() {
-		pm_list = append(pm_list, i.PaymentMethod())
-	}
-	if pm_list == nil {
+	cu, err := stripeapi.GetCustomerByEmail(body.Email)
+	if cu == nil {
+		log.Print("Error CheckCustomer: \n", err)
 		response := new(models.ResponseMessage)
-		response.Message = "no payment method"
+		response.Message = "Failed get Customer"
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	pm := pm_list[0]
-	default_params := &stripe.CustomerParams{
-		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
-			DefaultPaymentMethod: stripe.String(pm.ID),
-		},
+	pm, err := stripeapi.GetPaymentMethod(cu.ID, body.Type)
+	if pm == nil {
+		log.Print("Error GetPaymentMethode: \n", err)
+		response := new(models.ResponseMessage)
+		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	cu, err = customer.Update(cu.ID, default_params)
+	cu, err = stripeapi.SetDefaultPayment(cu.ID, pm.ID)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
-	}
+		response := new(models.ResponseMessage)
+		response.Message = "Failed set default payment"
+		return c.JSON(http.StatusBadRequest, response)
 
-	price_params := &stripe.PriceParams{
-		Nickname:   stripe.String("Standard Monthly"),
-		Product:    stripe.String("prod_HZW4PLYJeuxnyC"),
-		UnitAmount: stripe.Int64(body.Amount),
-		Currency:   stripe.String(string(stripe.CurrencyEUR)),
-		Recurring: &stripe.PriceRecurringParams{
-			Interval:  stripe.String(string(stripe.PriceRecurringIntervalMonth)),
-			UsageType: stripe.String(string(stripe.PriceRecurringUsageTypeLicensed)),
-		},
 	}
-
-	p, err := price.New(price_params)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+	p, err := stripeapi.CreatePrice(body.Amount)
+	if p != nil {
+		log.Print("Error CreatePrice: \n", err)
+		response := new(models.ResponseMessage)
+		response.Message = "failed creating price"
+		return c.JSON(http.StatusBadRequest, response)
 	}
-	params := &stripe.SubscriptionParams{
-		Customer: stripe.String(cu.ID),
-		Items: []*stripe.SubscriptionItemsParams{
-			{
-				Price:    stripe.String(p.ID),
-				Quantity: stripe.Int64(1),
-			},
-		},
-	}
-
-	params.AddExpand("latest_invoice.payment_intent")
-	s, err := sub.New(params)
+	s, err := stripeapi.SubProduct(cu.ID, p.ID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}

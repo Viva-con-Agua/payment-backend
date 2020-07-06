@@ -33,3 +33,15 @@ func GetCustomerByEmail(email string) (cu *stripe.Customer, err error) {
 		return cu_list[0], err
 	}
 }
+
+func SetDefaultPayment(cu_id string, pm_id string) (cu *stripe.Customer, err error) {
+	stripe.Key = utils.Config.Key
+	params := &stripe.CustomerParams{
+		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
+			DefaultPaymentMethod: stripe.String(pm_id),
+		},
+	}
+
+	cu, err = customer.Update(cu_id, params)
+	return cu, err
+}
