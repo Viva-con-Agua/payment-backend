@@ -9,6 +9,7 @@ type (
 		Amount   int64  `json:"amount"`
 		Currency string `json:"currency"`
 		Type     string `json:"type"`
+		Product  string `json:"product"`
 	}
 	ResponseMessage struct {
 		Message string `json:"message"`

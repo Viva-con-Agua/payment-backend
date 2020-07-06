@@ -8,12 +8,12 @@ import (
 	"github.com/stripe/stripe-go/sub"
 )
 
-func CreatePrice(amount int64) (p *stripe.Price, err error) {
+func CreatePrice(amount int64, pm_id string) (p *stripe.Price, err error) {
 
 	stripe.Key = utils.Config.Key
 	params := &stripe.PriceParams{
 		Nickname:   stripe.String("Standard Monthly"),
-		Product:    stripe.String("prod_HZW4PLYJeuxnyC"),
+		Product:    stripe.String(pm_id),
 		UnitAmount: stripe.Int64(amount),
 		Currency:   stripe.String(string(stripe.CurrencyEUR)),
 		Recurring: &stripe.PriceRecurringParams{
