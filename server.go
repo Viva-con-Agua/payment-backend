@@ -26,10 +26,10 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
-	e.POST("/api/v1/payment/card", controller.PaymentIntentCard)
-	e.POST("/api/v1/payment/iban", controller.PaymentIntentIBAN)
-	e.POST("/api/v1/payment/success", controller.SuccessPayment)
-	e.POST("/api/v1/payment/default", controller.AddDefaultPayment)
-	e.POST("api/v1/payment/subscription", controller.Subscription)
+	e.POST("/v1/payment/card", controller.PaymentIntentCard)
+	e.POST("/v1/payment/iban", controller.PaymentIntentIBAN)
+	e.POST("/v1/payment/success", controller.SuccessPayment)
+	e.POST("/v1/payment/default", controller.AddDefaultPayment)
+	e.POST("/v1/payment/subscription", controller.Subscription)
 	e.Logger.Fatal(e.Start(":1323"))
 }
