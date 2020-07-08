@@ -22,7 +22,7 @@ func main() {
 	utils.LoadConfig()
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
+		AllowOrigins: utils.Config.Alloworigins,
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
