@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+  "github.com/labstack/echo/middleware"
 )
 
 type (
