@@ -1,3 +1,4 @@
 key: sk_test_
+urlpath: payment
 alloworigins:
     - "*"
