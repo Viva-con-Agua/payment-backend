@@ -27,9 +27,9 @@ func main() {
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.POST("/v1"+utils.Config.Urlpath+"/card", controller.PaymentIntentCard)
-	e.POST("/v1/payment/iban", controller.PaymentIntentIBAN)
-	e.POST("/v1/payment/success", controller.SuccessPayment)
-	e.POST("/v1/payment/default", controller.AddDefaultPayment)
-	e.POST("/v1/payment/subscription", controller.Subscription)
+	e.POST("/v1"+utils.Config.Urlpath+"/iban", controller.PaymentIntentIBAN)
+	e.POST("/v1"+utils.Config.Urlpath+"/success", controller.SuccessPayment)
+	e.POST("/v1"+utils.Config.Urlpath+"/default", controller.AddDefaultPayment)
+	e.POST("/v1"+utils.Config.Urlpath+"/subscription", controller.Subscription)
 	e.Logger.Fatal(e.Start(":1323"))
 }
