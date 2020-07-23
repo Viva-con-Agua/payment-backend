@@ -7,6 +7,7 @@ import (
 var (
 	Config = struct {
 		Key          string `required:"true"`
+		Urlpath      string
 		Alloworigins []string
 	}{}
 )

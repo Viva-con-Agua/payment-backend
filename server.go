@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
-  "github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/middleware"
 )
 
 type (
@@ -26,7 +26,7 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
-	e.POST("/v1/payment/card", controller.PaymentIntentCard)
+	e.POST("/v1"+utils.Config.Urlpath+"/card", controller.PaymentIntentCard)
 	e.POST("/v1/payment/iban", controller.PaymentIntentIBAN)
 	e.POST("/v1/payment/success", controller.SuccessPayment)
 	e.POST("/v1/payment/default", controller.AddDefaultPayment)
