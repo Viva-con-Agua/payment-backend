@@ -7,7 +7,8 @@ import (
 var (
 	Config = struct {
 		Key          string `required:"true"`
-		Urlpath      string
+		Urlpath      string `required:"true"`
+		Payday       int    `required:"true"`
 		Alloworigins []string
 	}{}
 )

@@ -51,7 +51,7 @@ func SubProduct(cu_id string, p_id string) (s *stripe.Subscription, err error) {
 
 	stripe.Key = utils.Config.Key
 	start_time := GetDate()
-	billing_time := start_time.AddDate(0, 0, 4)
+	billing_time := start_time.AddDate(0, 0, utils.Config.Payday)
 	params := &stripe.SubscriptionParams{
 		Customer: stripe.String(cu_id),
 		Items: []*stripe.SubscriptionItemsParams{
