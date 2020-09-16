@@ -6,7 +6,6 @@ import (
 
 var (
 	Config = struct {
-		Key          string `required:"true"`
 		Alloworigins []string
 	}{}
 )

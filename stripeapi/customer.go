@@ -1,14 +1,14 @@
 package stripeapi
 
 import (
-	"payment-backend/utils"
+	"os"
 
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 )
 
 func CreateCustomer(email string, name string, locale string) (cu *stripe.Customer, err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	params := &stripe.CustomerParams{
 		Email:            stripe.String(string(email)),
 		Name:             stripe.String(string(name)),
@@ -19,7 +19,7 @@ func CreateCustomer(email string, name string, locale string) (cu *stripe.Custom
 }
 
 func GetCustomerByEmail(email string) (cu *stripe.Customer, err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	params := &stripe.CustomerListParams{}
 	params.Filters.AddFilter("email", "", email)
 	response := customer.List(params)
@@ -35,7 +35,7 @@ func GetCustomerByEmail(email string) (cu *stripe.Customer, err error) {
 }
 
 func SetDefaultPayment(cu_id string, pm_id string) (cu *stripe.Customer, err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	params := &stripe.CustomerParams{
 		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
 			DefaultPaymentMethod: stripe.String(pm_id),

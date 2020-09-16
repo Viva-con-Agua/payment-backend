@@ -2,7 +2,7 @@ package stripeapi
 
 import (
 	"errors"
-	"payment-backend/utils"
+	"os"
 	"time"
 
 	"github.com/stripe/stripe-go"
@@ -31,7 +31,7 @@ func CreatePrice(amount int64, pm_id string, interval string) (p *stripe.Price, 
 		err = errors.New("no interval")
 		return nil, err
 	}
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	params := &stripe.PriceParams{
 		Nickname:   stripe.String("Standard Monthly"),
 		Product:    stripe.String(pm_id),
@@ -49,7 +49,7 @@ func CreatePrice(amount int64, pm_id string, interval string) (p *stripe.Price, 
 
 func SubProduct(cu_id string, p_id string) (s *stripe.Subscription, err error) {
 
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	start_time := GetDate()
 	billing_time := start_time.AddDate(0, 0, 14)
 	params := &stripe.SubscriptionParams{
