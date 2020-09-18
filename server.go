@@ -1,10 +1,13 @@
 package main
 
 import (
+	"log"
+	"os"
 	"payment-backend/controller"
-	"payment-backend/utils"
+	"strings"
 
 	"github.com/go-playground/validator"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -19,10 +22,12 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 	return cv.validator.Struct(i)
 }
 func main() {
-	utils.LoadConfig()
+	godotenv.Load()
+
+	log.Print(os.Getenv("STRIPE_KEY"))
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: utils.Config.Alloworigins,
+		AllowOrigins: strings.Split(os.Getenv("ALLOW_ORIGINS"), ","),
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}

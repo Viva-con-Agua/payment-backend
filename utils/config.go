@@ -5,10 +5,7 @@ import (
 )
 
 var (
-	Config = struct {
-		Key          string `required:"true"`
-		Urlpath      string `required:"true"`
-		Payday       int    `required:"true"`
+  Config = struct {
 		Alloworigins []string
 	}{}
 )
