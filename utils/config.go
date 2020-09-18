@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	Config = struct {
+  Config = struct {
 		Alloworigins []string
 	}{}
 )
