@@ -3,6 +3,7 @@ package stripeapi
 import (
 	"errors"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/stripe/stripe-go"
@@ -48,10 +49,10 @@ func CreatePrice(amount int64, pm_id string, interval string) (p *stripe.Price, 
 }
 
 func SubProduct(cu_id string, p_id string) (s *stripe.Subscription, err error) {
-
+	payday, err := strconv.Atoi(os.Getenv("PAYDAY"))
 	stripe.Key = os.Getenv("STRIPE_KEY")
 	start_time := GetDate()
-	billing_time := start_time.AddDate(0, 0, utils.Config.Payday)
+	billing_time := start_time.AddDate(0, 0, payday)
 	params := &stripe.SubscriptionParams{
 		Customer: stripe.String(cu_id),
 		Items: []*stripe.SubscriptionItemsParams{
