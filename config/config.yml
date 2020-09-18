@@ -1,0 +1,5 @@
+key: sk_test_
+urlpath: payment
+payday: 14
+alloworigins:
+    - "*"

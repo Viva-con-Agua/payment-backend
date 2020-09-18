@@ -22,10 +22,14 @@ func main() {
 	utils.LoadConfig()
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
+		AllowOrigins: utils.Config.Alloworigins,
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 	e.Validator = &CustomValidator{validator: validator.New()}
-	e.POST("/secret", controller.PaymentIntentCard)
+	e.POST("/v1"+utils.Config.Urlpath+"/card", controller.PaymentIntentCard)
+	e.POST("/v1"+utils.Config.Urlpath+"/iban", controller.PaymentIntentIBAN)
+	e.POST("/v1"+utils.Config.Urlpath+"/success", controller.SuccessPayment)
+	e.POST("/v1"+utils.Config.Urlpath+"/default", controller.AddDefaultPayment)
+	e.POST("/v1"+utils.Config.Urlpath+"/subscription", controller.Subscription)
 	e.Logger.Fatal(e.Start(":1323"))
 }

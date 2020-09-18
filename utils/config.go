@@ -6,10 +6,13 @@ import (
 
 var (
 	Config = struct {
-		PrivatKey string `required:"true"`
+		Key          string `required:"true"`
+		Urlpath      string `required:"true"`
+		Payday       int    `required:"true"`
+		Alloworigins []string
 	}{}
 )
 
 func LoadConfig() {
-	configor.Load(&Config, "config.yml")
+	configor.Load(&Config, "config/config.yml")
 }
