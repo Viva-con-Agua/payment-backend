@@ -26,10 +26,12 @@ func main() {
 
 	log.Print(os.Getenv("STRIPE_KEY"))
 	e := echo.New()
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: strings.Split(os.Getenv("ALLOW_ORIGINS"), ","),
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-	}))
+	m := middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     strings.Split(os.Getenv("ALLOW_ORIGINS"), ","),
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowCredentials: true,
+	})
+	e.Use(m)
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.POST("/v1/payment/card", controller.PaymentIntentCard)
 	e.POST("/v1/payment/iban", controller.PaymentIntentIBAN)
