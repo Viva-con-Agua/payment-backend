@@ -31,6 +31,7 @@ func main() {
 		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowCredentials: true,
 	})
+	log.Print(strings.Split(os.Getenv("ALLOW_ORIGINS"), ","))
 	e.Use(m)
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.POST("/v1/payment/card", controller.PaymentIntentCard)
