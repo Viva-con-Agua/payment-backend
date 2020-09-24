@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"payment-backend/models"
@@ -51,6 +52,7 @@ func PaymentIntentCard(c echo.Context) (err error) {
 }
 
 func PaymentIntentIBAN(c echo.Context) (err error) {
+	log.Print(os.Getenv("GOT IBAN REQUEST"))
 	// create body as models.Role
 	body := new(models.Sepa)
 	// save data to body
