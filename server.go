@@ -39,5 +39,9 @@ func main() {
 	e.POST("/v1/payment/success", controller.SuccessPayment)
 	e.POST("/v1/payment/default", controller.AddDefaultPayment)
 	e.POST("/v1/payment/subscription", controller.Subscription)
-	e.Logger.Fatal(e.Start(":1323"))
+	if port, ok := os.LookupEnv("REPO_PORT"); ok {
+		e.Logger.Fatal(e.Start(":" + port))
+	} else {
+		e.Logger.Fatal(e.Start(":1323"))
+	}
 }
