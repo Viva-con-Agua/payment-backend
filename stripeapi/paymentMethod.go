@@ -2,8 +2,8 @@ package stripeapi
 
 import (
 	"errors"
+	"os"
 	"payment-backend/models"
-	"payment-backend/utils"
 
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/paymentmethod"
@@ -12,7 +12,7 @@ import (
 
 func SetupIntent(cu_id string, pm_type string) (co_data *models.CheckoutData, err error) {
 
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	params := &stripe.SetupIntentParams{
 		PaymentMethodTypes: []*string{
 			stripe.String(pm_type),
@@ -30,7 +30,7 @@ func SetupIntent(cu_id string, pm_type string) (co_data *models.CheckoutData, er
 }
 
 func GetPaymentMethod(cu_id string, pm_type string) (pm_method *stripe.PaymentMethod, err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 
 	pm_params := &stripe.PaymentMethodListParams{
 		Customer: stripe.String(cu_id),

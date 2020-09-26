@@ -1,9 +1,10 @@
 package controller
 
 import (
+	"log"
 	"net/http"
+	"os"
 	"payment-backend/models"
-	"payment-backend/utils"
 
 	"github.com/labstack/echo"
 	"github.com/stripe/stripe-go"
@@ -23,7 +24,7 @@ func PaymentIntentCard(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 
 	cu_params := &stripe.CustomerParams{
 		Email:            stripe.String(string(body.Email)),
@@ -51,6 +52,7 @@ func PaymentIntentCard(c echo.Context) (err error) {
 }
 
 func PaymentIntentIBAN(c echo.Context) (err error) {
+	log.Print(os.Getenv("GOT IBAN REQUEST"))
 	// create body as models.Role
 	body := new(models.Sepa)
 	// save data to body
@@ -62,7 +64,7 @@ func PaymentIntentIBAN(c echo.Context) (err error) {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 
 	cu_params := &stripe.CustomerParams{
 		Email:            stripe.String(string(body.Email)),

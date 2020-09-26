@@ -4,9 +4,9 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
 	"payment-backend/models"
 	"payment-backend/stripeapi"
-	"payment-backend/utils"
 
 	"github.com/labstack/echo"
 	"github.com/stripe/stripe-go"
@@ -19,7 +19,7 @@ import (
 * return stripe Customer
  */
 func CheckCustomer(billing *models.Billing) (customer_id *stripe.Customer, err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	cu_search_params := &stripe.CustomerListParams{}
 	cu_search_params.Filters.AddFilter("email", "", billing.Email)
 	cu_response := customer.List(cu_search_params)
@@ -48,8 +48,7 @@ func CheckCustomer(billing *models.Billing) (customer_id *stripe.Customer, err e
 * get payment method from stripe api via customer id and given type
  */
 func GetPaymentMethod(cu_id string, pm_type string) (pm_method *stripe.PaymentMethod, err error) {
-	stripe.Key = utils.Config.Key
-
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	pm_params := &stripe.PaymentMethodListParams{
 		Customer: stripe.String(cu_id),
 		Type:     stripe.String(pm_type),
@@ -71,7 +70,7 @@ func GetPaymentMethod(cu_id string, pm_type string) (pm_method *stripe.PaymentMe
  */
 func AddDefaultPayment(c echo.Context) (err error) {
 
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	//handle body as Subscription
 	body := new(models.Billing)
 	if err = c.Bind(body); err != nil {
@@ -105,7 +104,7 @@ func AddDefaultPayment(c echo.Context) (err error) {
 }
 
 func Subscription(c echo.Context) (err error) {
-	stripe.Key = utils.Config.Key
+	stripe.Key = os.Getenv("STRIPE_KEY")
 	//handle body as Subscription
 	body := new(models.Billing)
 	if err = c.Bind(body); err != nil {
