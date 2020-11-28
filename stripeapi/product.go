@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/stripe/stripe-go"
-	"github.com/stripe/stripe-go/price"
-	"github.com/stripe/stripe-go/sub"
+	"github.com/stripe/stripe-go/v71"
+	"github.com/stripe/stripe-go/v71/price"
+	"github.com/stripe/stripe-go/v71/sub"
 )
 
 func GetDate() (t time.Time) {
