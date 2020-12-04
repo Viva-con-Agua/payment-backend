@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"payment-backend/models"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stripe/stripe-go"
 	"github.com/stripe/stripe-go/customer"
 	"github.com/stripe/stripe-go/paymentintent"

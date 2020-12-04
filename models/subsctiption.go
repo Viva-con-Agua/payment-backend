@@ -1,7 +1,5 @@
 package models
 
-import "github.com/plutov/paypal/v3"
-
 type (
 	//Billing stripe billing information
 	Billing struct {
@@ -13,6 +11,17 @@ type (
 		Currency string `json:"currency"`
 		Type     string `json:"type"`
 		Product  string `json:"product"`
+	}
+	//BillingPaypal represents the initial model for paypal subscribtion
+	BillingPaypal struct {
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Interval    string `json:"interval"`
+		Locale      string `json:"locale"`
+		Amount      string `json:"amount"`
+		Currency    string `json:"currency"`
+		Type        string `json:"type"`
+		Product     string `json:"product"`
 	}
 
 	//ResponseMessage message for response
@@ -30,10 +39,3 @@ type (
 		HomeURL     string `json:"home_url"`
 	}
 )
-
-func (b *Billing) Paypal() *paypal.BillingPlan {
-	return &paypal.BillingPlan{
-		ProductID: b.Product,
-		Name:      b.Name,
-	}
-}
