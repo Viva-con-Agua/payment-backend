@@ -2,20 +2,16 @@ version: '3'
 
 services:
   
-  app:
+  payment-backend:
+    image: vivaconagua/payment-backend:latest
     build: .
     restart: unless-stopped
-    volumes:
-        - ${REPO_CONFIG_PATH}/payment-backend/prod.env:/go/src/payment-backend/.env
-    environment:
-        - ALLOW_ORIGINS=${ALLOW_ORIGINS}
-        - COOKIE_SECURE=${COOKIE_SECURE}
-        - SAME_SITE=${SAME_SITE}
+    env_file:
+        - .env
     networks:
-      app_net:
-          aliases:
-              - payment-backend
+      api_net:
+
 networks:
-  app_net:
+  api_net:
     external:
-        name: api-deploy_app
+        name: api_net
