@@ -1,0 +1,5 @@
+volumes
+.env
+docker-compose.yml
+docker-compose.dev.yml
+Dockerfile
